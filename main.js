@@ -1,22 +1,51 @@
-// PRIMERA PRE ENTREGA DEL PROYECTO FINAL
-// - CREAR UN ALGORITMO CON UN CONDICIONAL
-// - CREAR UN ALGORITMO UTILIZANDO UN CICLO
-// - ARMAR UN SIMULADOR INTERACTIVO: CARRITO DE COMPRAS
+// SEGUNDA PRE ENTREGA DEL PROYECTO FINAL
+// - Codificar la funcionalidad inicial del simulador.
+// - Capturar entradas mediante prompt()
+// - Declarar variables y objetos necesarios para simular el proceso seleccionado.
+// - Crear funciones y/o metodos para realizar operaciones.
+// - Efectuar una salida, que es el resultado de los datos procesados.
+// - Utilizar objetos, arrays y metodos de busqueda y filtrado sobre el array.
 
-let total = 0.0;
 let menuDecision;  // Variable para el ciclo do-while
 
-function agregarItemCarrito(precio, cantidad) {
-    // Esta funcion agrega "items" al carrito, incluyendo precio y cantidad
-    console.log("El usuario agrega " + cantidad + " productos de $" + precio);
-    total += precio * cantidad;
+const carrito = [];
+
+
+class Item {
+    constructor(name, price, quantity) {
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+    }
 }
+
+
+function agregarItemCarrito(nombre, precio, cantidad) {
+    // Esta funcion agrega un Item al carrito
+    console.log(`El usuario agrega ${cantidad} unidades de '${nombre}', de ARS${precio} cada uno.`);
+    producto = new Item(nombre, precio, cantidad);
+    carrito.push(producto);
+}
+
+
+function mostrarCarrito() {
+    // Esta funcion muestra el contenido actual del carrito
+    precioFinal = carrito.reduce((total, producto) => { return total + (producto.price * producto.quantity) }, 0);
+    let lineas = carrito.map((producto) => { return `Producto: ${producto.name}, precio: ${producto.price}, cantidad: ${producto.quantity}` })
+    let todosItems = `- ${lineas.join('\n- ')}`
+    if (carrito.length) {
+        alert(`Su carrito:\n${todosItems}\nTotal del carrito: ARS${precioFinal}`);
+    } else {
+        alert('Su carrito se encuentra vacio.')
+    }
+}
+
 
 function vaciarCarrito() {
     // Esta funcion vacía el carrito
     let vaciarDecision = prompt("Estas seguro que deseas vaciar el carrito? (si/no): ");
     if (vaciarDecision == "si") {
-        total = 0;
+        carrito.splice(0);
         alert("Carrito vaciado con exito.");
         console.log("Vaciar carrito: el usuario vacio el carrito.");
     } else {
@@ -24,10 +53,59 @@ function vaciarCarrito() {
     }
 }
 
-function mostrarCarrito() {
-    // Esta funcion muestra el contenido actual del carrito (precio total)
-    alert("El total del carrito es de $" + total);
+
+function modificarItem() {
+    // Esta funcion permite modificar un item del carrito, como modificar su precio o cantidad
+    if (carrito.length) {
+        let lineas = carrito.map((producto) => { return `Producto: ${producto.name}, precio: ${producto.price}, cantidad: ${producto.quantity}` })
+        let todosItems = `- ${lineas.join('\n- ')}`
+        let modifDecision = prompt(
+            `Qué producto deseas modificar?:\n${todosItems}\n(Ingrese el nombre del producto, o 0 para abortar)`
+        )
+        
+        if (modifDecision != '0') {
+            let con = false;  // Variable bandera: en caso de que no haya coincidencias, imprime lo correspondiente
+            for (const producto of carrito) {
+                if (producto.name == modifDecision) {
+                    con = true;
+                    
+                    switch (prompt(
+                        `Seleccionaste '${producto.name}'. Que deseas modificar?\n(1) Precio\n(2) Cantidad\n(3) Abortar`
+                    )) {
+                        case '1':
+                            let nuevoPrecio = parseFloat(prompt(`Ingrese el nuevo valor del producto (valor actual: ARS${producto.price})`));
+                            let indicePrecio = carrito.findIndex((productoFindIndex) => { return productoFindIndex.name === modifDecision });
+                            carrito[indicePrecio].price = nuevoPrecio;
+                            break;
+                    
+                        
+                        case '2':
+                            let nuevaCantidad = parseInt(prompt(`Ingrese la nueva cantidad de productos (cantidad actual: ${producto.quantity} productos)`));
+                            let indiceCantidad = carrito.findIndex((productoFindIndex) => { return productoFindIndex.name === modifDecision });
+                            carrito[indiceCantidad].quantity = nuevaCantidad;
+                            break;
+                        
+                        case '3':
+                            break;
+                        
+                        default:
+                            alert('Ingresaste una opcion invalida.')
+                            break;
+                    }
+
+                } 
+            }
+            if (!con) {
+                alert('Ingresaste una opcion invalida. Asegurate de escribir el nombre del producto correctamente')
+            }
+        }
+
+        
+    } else {
+        alert('Su carrito se encuentra vacio.')
+    }
 }
+
 
 function calcularCuotas() {
     // Esta funcion permite calcular el valor total del carrito en caso de que
@@ -65,12 +143,13 @@ function calcularCuotas() {
 
 do {
     // La logica del menu
-    menuDecision = prompt("Elija alguna de las siguientes opciones:\n (1) Agregar productos al carrito\n (2) Mostrar el carrito\n (3) Calcular carrito en cuotas\n (4) Vaciar el carrito\n (5) Finalizar el programa");
+    menuDecision = prompt("Elija alguna de las siguientes opciones:\n (1) Agregar productos al carrito\n (2) Mostrar el carrito\n (3) Calcular carrito en cuotas\n (4) Vaciar el carrito\n (5) Modificar un item\n (6) Finalizar el programa");
     switch (menuDecision) {
         case '1':
+            let nombre = prompt("Ingrese el nombre del producto: ")
             let precio = parseFloat(prompt("Ingrese el valor del producto: "));
             let cantidad = parseInt(prompt("Ingrese la cantidad de productos: "));
-            agregarItemCarrito(precio, cantidad);
+            agregarItemCarrito(nombre, precio, cantidad);
             break;
     
         case '2':
@@ -86,10 +165,13 @@ do {
             break;
         
         case '5':
+            modificarItem();
+        
+        case '6':
             break;
         
         default:
             alert("Por favor, seleccione una opcion valida (evite espacios y/o numeros fuera del rango)");
     }
 
-} while (menuDecision != 5);
+} while (menuDecision != 6);
