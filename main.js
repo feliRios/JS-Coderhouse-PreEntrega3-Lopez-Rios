@@ -75,14 +75,25 @@ function modificarItem() {
                         case '1':
                             let nuevoPrecio = parseFloat(prompt(`Ingrese el nuevo valor del producto (valor actual: ARS${producto.price})`));
                             let indicePrecio = carrito.findIndex((productoFindIndex) => { return productoFindIndex.name === modifDecision });
-                            carrito[indicePrecio].price = nuevoPrecio;
+
+                            if (isNaN(nuevoPrecio)) {
+                                alert('Ingresaste una entrada invalida. Asegurate de escribir un valor numerico')
+                            } else {
+                                carrito[indicePrecio].price = nuevoPrecio;
+                            }
+
                             break;
                     
-                        
                         case '2':
                             let nuevaCantidad = parseInt(prompt(`Ingrese la nueva cantidad de productos (cantidad actual: ${producto.quantity} productos)`));
                             let indiceCantidad = carrito.findIndex((productoFindIndex) => { return productoFindIndex.name === modifDecision });
-                            carrito[indiceCantidad].quantity = nuevaCantidad;
+
+                            if (isNaN(nuevaCantidad)) {
+                                alert('Ingresaste una entrada invalida. Asegurate de escribir un valor numerico.')
+                            } else {
+                                carrito[indiceCantidad].quantity = nuevaCantidad;
+                            }
+
                             break;
                         
                         case '3':
@@ -100,7 +111,6 @@ function modificarItem() {
             }
         }
 
-        
     } else {
         alert('Su carrito se encuentra vacio.')
     }
