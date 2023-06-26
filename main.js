@@ -124,6 +124,7 @@ function calcularCuotas() {
     // 12 cuotas -> 20% interes
     // 18 cuotas -> 22% interes
     let cuotas = parseInt(prompt("Ingrese la cantidad de cuotas que desea estimar:\n 6 cuotas -> 15% interes\n 12 cuotas -> 20% interes\n 18 cuotas -> 22% interes"));
+    let total = carrito.reduce((total, producto) => { return total + (producto.price * producto.quantity) }, 0);
     let valorCuota = total / cuotas;
     let valorCuotaConInteres, valorTotal;
 
