@@ -13,9 +13,9 @@ const carrito = [];
 
 class Item {
     constructor(name, price, quantity) {
-        this.name = name;
-        this.price = price;
-        this.quantity = quantity;
+        this.name = name || '';
+        this.price = price || 0;
+        this.quantity = quantity || 0;
     }
 }
 
@@ -33,11 +33,14 @@ function mostrarCarrito() {
     precioFinal = carrito.reduce((total, producto) => { return total + (producto.price * producto.quantity) }, 0);
     let lineas = carrito.map((producto) => { return `Producto: ${producto.name}, precio: ${producto.price}, cantidad: ${producto.quantity}` })
     let todosItems = `- ${lineas.join('\n- ')}`
-    if (carrito.length) {
-        alert(`Su carrito:\n${todosItems}\nTotal del carrito: ARS${precioFinal}`);
-    } else {
-        alert('Su carrito se encuentra vacio.')
-    }
+
+    // if (carrito.length) {
+    //     alert(`Su carrito:\n${todosItems}\nTotal del carrito: ARS${precioFinal}`);
+    // } else {
+    //     alert('Su carrito se encuentra vacio.')
+    // }
+
+    carrito.length ? alert(`Su carrito:\n${todosItems}\nTotal del carrito: ARS${precioFinal}`) : alert('Su carrito se encuentra vacio.')
 }
 
 
@@ -88,11 +91,13 @@ function modificarItem() {
                             let nuevaCantidad = parseInt(prompt(`Ingrese la nueva cantidad de productos (cantidad actual: ${producto.quantity} productos)`));
                             let indiceCantidad = carrito.findIndex((productoFindIndex) => { return productoFindIndex.name === modifDecision });
 
-                            if (isNaN(nuevaCantidad)) {
-                                alert('Ingresaste una entrada invalida. Asegurate de escribir un valor numerico.')
-                            } else {
-                                carrito[indiceCantidad].quantity = nuevaCantidad;
-                            }
+                            // if (isNaN(nuevaCantidad)) {
+                            //     alert('Ingresaste una entrada invalida. Asegurate de escribir un valor numerico.')
+                            // } else {
+                            //     carrito[indiceCantidad].quantity = nuevaCantidad;
+                            // }
+
+                            isNaN(nuevaCantidad) ? alert('Ingresaste una entrada invalida. Asegurate de escribir un valor numerico.') : carrito[indiceCantidad].quantity = nuevaCantidad
 
                             break;
                         
@@ -106,9 +111,11 @@ function modificarItem() {
 
                 } 
             }
-            if (!con) {
-                alert('Ingresaste una opcion invalida. Asegurate de escribir el nombre del producto correctamente')
-            }
+            // if (!con) {
+            //     alert('Ingresaste una opcion invalida. Asegurate de escribir el nombre del producto correctamente')
+
+            !con && alert('Ingresaste una opcion invalida. Asegurate de escribir el nombre del producto correctamente');
+
         }
 
     } else {
@@ -152,8 +159,8 @@ function calcularCuotas() {
   }
 }
 
+// La logica del menu
 do {
-    // La logica del menu
     menuDecision = prompt("Elija alguna de las siguientes opciones:\n (1) Agregar productos al carrito\n (2) Mostrar el carrito\n (3) Calcular carrito en cuotas\n (4) Vaciar el carrito\n (5) Modificar un item\n (6) Finalizar el programa");
     switch (menuDecision) {
         case '1':
