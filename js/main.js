@@ -1,20 +1,28 @@
 // TERCERA PRE ENTREGA DEL PROYECTO FINAL
-// - Codificar funciones de procesos esenciales y notificación de resultados 
+// - Codificar funciones de procesos esenciales y notificación de resultados
 //   por HTML, añadiendo interacción al simulador.
-// - Ampliar y refinar el flujo de trabajo del script en términos de captura 
-//   de eventos, procesamiento del simulador y notificación de resultados en 
+// - Ampliar y refinar el flujo de trabajo del script en términos de captura
+//   de eventos, procesamiento del simulador y notificación de resultados en
 //   forma de salidas por HTML, modificando el DOM.
 // - Definir eventos a manejar y su función de respuesta.
-// - Modificar el DOM, ya sea para definir elementos al cargar la página o para 
+// - Modificar el DOM, ya sea para definir elementos al cargar la página o para
 //   realizar salidas de un procesamiento.
 // - Almacenar datos (clave-valor) en el Storage y recuperarlos
 
-let menuDecision;  // Variable para el ciclo do-while
 
-const carrito = [];
+// Inicializacion de un carrito en el session storage:
+// si el carrito existe (es decir, ya se ejecuto el programa), se prosigue con el programa.
+// Si el carrito no existe (es decir, primera ejecucion), entonces se crea un carrito vacio
+
+
+if (!JSON.parse(sessionStorage.getItem('carrito'))) {
+    let carrito = [];
+    sessionStorage.setItem('carrito', JSON.stringify(carrito));
+}
 
 
 class Item {
+    // Clase Item del carrito. Se aplicaron operadores ternarios para evitar nulls y NaNs
     constructor(name, price, quantity) {
         this.name = name || '';
         this.price = price || 0;
@@ -23,11 +31,33 @@ class Item {
 }
 
 
-function agregarItemCarrito(nombre, precio, cantidad) {
+function agregarItemCarrito() {
     // Esta funcion agrega un Item al carrito
-    console.log(`El usuario agrega ${cantidad} unidades de '${nombre}', de ARS${precio} cada uno.`);
-    producto = new Item(nombre, precio, cantidad);
-    carrito.push(producto);
+    options.innerHTML = `
+                            <form id="product-send-form" action="">
+                                <input id="product-name" type="text" placeholder="Nombre del producto" required>
+                                <input id="product-value" type="number" placeholder="Precio del producto" required>
+                                <input id="product-quantity" type="number" placeholder="Cantidad de unidades de producto" required>
+                                <input type="submit">
+                            </form>
+                        `
+    
+    let enviarForm = document.getElementById('product-send-form');
+    enviarForm.addEventListener('submit', (e) => {
+        // Escuchador de evento para cargar el item en el carrito
+        e.preventDefault();
+        let nombreProducto = document.getElementById('product-name').value;
+        let valorProducto = document.getElementById('product-value').value;
+        let cantidadProducto = document.getElementById('product-quantity').value;
+        const producto = new Item(nombreProducto, valorProducto, cantidadProducto);
+        
+        const carritoJSON = sessionStorage.getItem('carrito');
+        carrito = JSON.parse(carritoJSON);
+        carrito.push(producto);
+        sessionStorage.setItem('carrito', JSON.stringify(carrito));
+    })
+    
+    // console.log(`El usuario agrega ${cantidad} unidades de '${nombre}', de ARS${precio} cada uno.`);
 }
 
 
@@ -163,36 +193,65 @@ function calcularCuotas() {
 }
 
 // La logica del menu
-do {
-    menuDecision = prompt("Elija alguna de las siguientes opciones:\n (1) Agregar productos al carrito\n (2) Mostrar el carrito\n (3) Calcular carrito en cuotas\n (4) Vaciar el carrito\n (5) Modificar un item\n (6) Finalizar el programa");
-    switch (menuDecision) {
-        case '1':
-            let nombre = prompt("Ingrese el nombre del producto: ")
-            let precio = parseFloat(prompt("Ingrese el valor del producto: "));
-            let cantidad = parseInt(prompt("Ingrese la cantidad de productos: "));
-            agregarItemCarrito(nombre, precio, cantidad);
-            break;
+// do {
+//     menuDecision = prompt("Elija alguna de las siguientes opciones:\n (1) Agregar productos al carrito\n (2) Mostrar el carrito\n (3) Calcular carrito en cuotas\n (4) Vaciar el carrito\n (5) Modificar un item\n (6) Finalizar el programa");
+//     switch (menuDecision) {
+//         case '1':
+//             let nombre = prompt("Ingrese el nombre del producto: ")
+//             let precio = parseFloat(prompt("Ingrese el valor del producto: "));
+//             let cantidad = parseInt(prompt("Ingrese la cantidad de productos: "));
+//             agregarItemCarrito(nombre, precio, cantidad);
+//             break;
     
-        case '2':
-            mostrarCarrito();
-            break;
+//         case '2':
+//             mostrarCarrito();
+//             break;
 
-        case '3':
-            calcularCuotas();
-            break;
+//         case '3':
+//             calcularCuotas();
+//             break;
         
-        case '4':
-            vaciarCarrito();
-            break;
+//         case '4':
+//             vaciarCarrito();
+//             break;
         
-        case '5':
-            modificarItem();
+//         case '5':
+//             modificarItem();
         
-        case '6':
-            break;
+//         case '6':
+//             break;
         
-        default:
-            alert("Por favor, seleccione una opcion valida (evite espacios y/o numeros fuera del rango)");
-    }
+//         default:
+//             alert("Por favor, seleccione una opcion valida (evite espacios y/o numeros fuera del rango)");
+//     }
 
-} while (menuDecision != 6);
+// } while (menuDecision != 6);
+
+let options = document.querySelector('.options');
+
+
+options.innerHTML = `
+                        <ul>
+                            <li>
+                                <button class="option-button" id="add-item">Agregar un producto</button>
+                            </li>
+                            <li>
+                                <button class="option-button" id="show-cart">Mostrar carrito</button>
+                            </li>
+                            <li>
+                                <button class="option-button" id="calc-cart">Calcular carrito en cuotas</button>
+                            </li>
+                            <li>
+                                <button class="option-button" id="modify-item">Modificar un item</button>
+                            </li>
+                            <li>
+                                <button class="empty-shopping-cart option-button" id="empty-cart">VACIAR CARRITO</button>
+                            </li>
+                        </ul>
+                    `;
+
+// Resolucion agregar item:
+
+let addItem = document.getElementById('add-item');
+
+addItem.addEventListener('click', agregarItemCarrito);
