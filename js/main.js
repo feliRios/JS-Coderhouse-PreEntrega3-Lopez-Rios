@@ -1,10 +1,13 @@
-// SEGUNDA PRE ENTREGA DEL PROYECTO FINAL
-// - Codificar la funcionalidad inicial del simulador.
-// - Capturar entradas mediante prompt()
-// - Declarar variables y objetos necesarios para simular el proceso seleccionado.
-// - Crear funciones y/o metodos para realizar operaciones.
-// - Efectuar una salida, que es el resultado de los datos procesados.
-// - Utilizar objetos, arrays y metodos de busqueda y filtrado sobre el array.
+// TERCERA PRE ENTREGA DEL PROYECTO FINAL
+// - Codificar funciones de procesos esenciales y notificación de resultados 
+//   por HTML, añadiendo interacción al simulador.
+// - Ampliar y refinar el flujo de trabajo del script en términos de captura 
+//   de eventos, procesamiento del simulador y notificación de resultados en 
+//   forma de salidas por HTML, modificando el DOM.
+// - Definir eventos a manejar y su función de respuesta.
+// - Modificar el DOM, ya sea para definir elementos al cargar la página o para 
+//   realizar salidas de un procesamiento.
+// - Almacenar datos (clave-valor) en el Storage y recuperarlos
 
 let menuDecision;  // Variable para el ciclo do-while
 
