@@ -63,29 +63,71 @@ function agregarItemCarrito() {
 
 function mostrarCarrito() {
     // Esta funcion muestra el contenido actual del carrito
+    carritoJSON = sessionStorage.getItem('carrito');
+    carrito = JSON.parse(carritoJSON);
     precioFinal = carrito.reduce((total, producto) => { return total + (producto.price * producto.quantity) }, 0);
-    let lineas = carrito.map((producto) => { return `Producto: ${producto.name}, precio: ${producto.price}, cantidad: ${producto.quantity}` })
-    let todosItems = `- ${lineas.join('\n- ')}`
+    let lineas = carrito.map((producto) => { return `<li>Producto: ${producto.name}, precio: ${producto.price}, cantidad: ${producto.quantity}</li>` })
 
-    // if (carrito.length) {
-    //     alert(`Su carrito:\n${todosItems}\nTotal del carrito: ARS${precioFinal}`);
-    // } else {
-    //     alert('Su carrito se encuentra vacio.')
-    // }
+    // carrito.length ? alert(`Su carrito:\n${todosItems}\nTotal del carrito: ARS${precioFinal}`) : alert('Su carrito se encuentra vacio.')
 
-    carrito.length ? alert(`Su carrito:\n${todosItems}\nTotal del carrito: ARS${precioFinal}`) : alert('Su carrito se encuentra vacio.')
-}
+    if (carrito.length) {
+        options.innerHTML = `
+                            <span>Total items: </span>
+                            <ul>
+                                ${lineas}
+                            </ul>
+                            <span>TOTAL DEL CARRITO: ARS${precioFinal}</span>
+                            `;
+    } else {
+        options.innerHTML = `
+                            <span>Su carrito se encuentra vacio</span>
+                            `;
+    }
+
+    }
 
 
 function vaciarCarrito() {
     // Esta funcion vacía el carrito
-    let vaciarDecision = prompt("Estas seguro que deseas vaciar el carrito? (si/no): ");
-    if (vaciarDecision == "si") {
-        carrito.splice(0);
-        alert("Carrito vaciado con exito.");
-        console.log("Vaciar carrito: el usuario vacio el carrito.");
+    let carritoJSON = sessionStorage.getItem('carrito');
+    carrito = JSON.parse(carritoJSON);
+    // let vaciarDecision = prompt("Estas seguro que deseas vaciar el carrito? (si/no): ");
+
+    if (carrito.length != 0) {
+        options.innerHTML = `
+                            <form id="empty-cart-form" action="">
+                                <span>¿Estás seguro que deseas vaciar el carrito?</span>
+                                <label for="empty-yes">Si</label>
+                                <input id="empty-yes" type="radio" name="emptybutton" value="yes">
+                                <label for="empty-no">No</label>
+                                <input id="empty-no" type="radio" name="emptybutton" value="no">
+                                <input type="submit" value="CONFIRMAR">
+                            </form>
+                        `
+
+        let enviarForm = document.getElementById('empty-cart-form');
+        enviarForm.addEventListener('submit', (e) => {
+            // Escuchador de evento para vaciar el carrito
+            e.preventDefault();
+            let emptyButtons = document.querySelector('input[name="emptybutton"]:checked').value;
+            console.log(emptyButtons);
+
+            if (emptyButtons == "yes") {
+                carrito.splice(0);
+                carritoJSON = JSON.stringify(carrito);
+                sessionStorage.setItem('carrito', carritoJSON);
+                options.innerHTML = `
+                                    <p>Carrito vaciado correctamente.</p>
+                                `
+                console.log("Vaciar carrito: el usuario vacio el carrito.");
+            } else {
+                console.log("Vaciar carrito: el usuario ingreso 'no' o un input no valido.");
+            }
+        })
     } else {
-        console.log("Vaciar carrito: el usuario ingreso 'no' o un input no valido.");
+        options.innerHTML = `
+                            <p>Su carrito ya se encuentra vacio</p>
+                        `
     }
 }
 
@@ -251,7 +293,16 @@ options.innerHTML = `
                     `;
 
 // Resolucion agregar item:
-
 let addItem = document.getElementById('add-item');
 
 addItem.addEventListener('click', agregarItemCarrito);
+
+// Resolucion mostrar carrito:
+let showCart = document.getElementById('show-cart');
+
+showCart.addEventListener('click', mostrarCarrito);
+
+// Resolucion vaciar carrito:
+let emptyCart = document.getElementById('empty-cart');
+
+emptyCart.addEventListener('click', vaciarCarrito);
