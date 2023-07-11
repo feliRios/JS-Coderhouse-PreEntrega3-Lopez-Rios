@@ -5,3 +5,19 @@ body {
 .empty-shopping-cart {
     color: red;
 }
+
+.container {
+    background-color: rgb(255, 115, 1);
+    box-shadow: 15px 15px 15px black ;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.options ul {
+    list-style: none;
+}
+
+.options ul li {
+    margin: 10px;
+}
